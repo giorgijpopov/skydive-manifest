@@ -61,9 +61,22 @@ def add_flight():
         session.add(new_flight)
         session.commit()
 
-        return redirect('/')
+        return redirect(f'/flights_by_date?date={date}')
     else:
-        return render_template('add_flight.html')
+        date_str = request.args.get('date')
+        try:
+            date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except ValueError:
+            return "Incorrect date type, please try YYYY-MM-DD."
+
+        existing_flight_numbers = [
+            flight.flight_number for flight in session.query(Flight).filter_by(date=date).all()
+        ]
+        flight_number = 1
+        while flight_number in existing_flight_numbers:
+            flight_number += 1
+
+        return render_template('add_flight.html', date_str=date_str, flight_number=flight_number)
 
 @app.route('/edit_flight', methods=['GET', 'POST'])
 def edit_flight():
@@ -82,7 +95,7 @@ def edit_flight():
             flight_to_edit.aircraft_model = request.form.get('aircraft_model')
             flight_to_edit.parachutists = skydivers_separator.join(request.form.getlist('parachutist'))
             session.commit()
-            return redirect('/next_flight')
+            return redirect(f'/flights_by_date?date={date}')
         else:
             return "Flight not found"
     else:
@@ -100,3 +113,36 @@ def edit_flight():
         else:
             return "Flight not found"
 
+@app.route('/flights_by_date', methods=['GET'])
+def flights_by_date():
+    date_str = request.args.get('date')
+    try:
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        return "Incorrect date type, please try YYYY-MM-DD."
+
+    flights = (
+        session.query(Flight)
+        .filter_by(date=date)
+        .order_by(Flight.time)
+        .all()
+    )
+
+    return render_template('flights_by_date.html', date=date, flights=flights)
+
+@app.route('/delete_flight', methods=['POST'])
+def delete_flight():
+    date_str = request.form.get('date')
+    flight_number = request.form.get('flight_number')
+
+    flight_to_delete = (
+        session.query(Flight)
+        .filter_by(date=date_str, flight_number=flight_number)
+        .first()
+    )
+
+    if flight_to_delete:
+        session.delete(flight_to_delete)
+        session.commit()
+
+    return redirect(f'/flights_by_date?date={date_str}')

@@ -9,7 +9,7 @@ class Flight(Base):
     id = Column(Integer, primary_key=True)
     date = Column(Date, index=True)
     time = Column(Time)
-    flight_number = Column(String)
+    flight_number = Column(Integer, index=True)
     aircraft_model = Column(String)
     parachutists = Column(String)
 

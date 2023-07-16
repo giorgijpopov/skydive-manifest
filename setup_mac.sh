@@ -12,7 +12,7 @@ CREATE TABLE flights (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date DATE,
     time TIME,
-    flight_number TEXT,
+    flight_number INTEGER,
     aircraft_model TEXT,
     parachutists TEXT
 );
