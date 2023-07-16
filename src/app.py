@@ -3,6 +3,7 @@ from datetime import date
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, render_template, request, redirect
+import json
 
 from models import Flight
 
@@ -16,12 +17,15 @@ session = Session()
 app = Flask(__name__)
 
 @app.route('/')
-def home():
+def index():
     today = date.today()
     return render_template('index.html', date=today)
 
 @app.route('/next_flight')
-def index():
+def next_flight():
+    return render_template('next_flight.html')
+@app.route('/next_flight_data')
+def next_flight_data():
     current_datetime = datetime.now()
 
     closest_flight = (
@@ -36,12 +40,18 @@ def index():
         datetime1 = datetime.combine(datetime.min, closest_flight.time)
         datetime2 = datetime.combine(datetime.min, current_datetime.time())
         diff = datetime1 - datetime2
-        hours = diff.seconds // 3600
-        minutes = (diff.seconds // 60) % 60
-        seconds = diff.seconds % 60
         remaining_time = diff.seconds // 60
-
-    return render_template('next_flight.html', flight=closest_flight, remaining_time=remaining_time)
+        flight_data = {
+            'flight': {
+                'flight_number': closest_flight.flight_number,
+                'aircraft_model': closest_flight.aircraft_model,
+                'parachutists': closest_flight.parachutists,
+            },
+            'remaining_time': remaining_time,
+        }
+        return json.dumps(flight_data)
+    else:
+        return json.dumps({'flight': None, 'remaining_time': None})
 
 @app.route('/add_flight', methods=['GET', 'POST'])
 def add_flight():

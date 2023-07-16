@@ -1,6 +1,5 @@
 <html>
 <head>
-    <meta http-equiv="refresh" content="60">
     <title>Next Flight</title>
     <style>
         body {
@@ -19,22 +18,12 @@
 </head>
 <body>
 <h1>Next Flight</h1>
-{% if flight %}
-    {% if remaining_time <= 10 %}
-            <p>Time Left: <span class="remaining-time">{{ remaining_time }} min</span></p>
-    {% else %}
-            <p>Time Left: {{ remaining_time }} min</p>
-    {% endif %}
-    <p>Flight Number: {{ flight.flight_number }}</p>
-    <p>Aircraft: {{ flight.aircraft_model }}</p>
-    <p>Skydivers:</p>
-    <ul>
-        {% for parachutist in flight.parachutists.split(";") %}
-            <li>{{ parachutist }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No flights yet</p>
-{% endif %}
+    <p id="time"></p>
+    <p id="flight-number"></p>
+    <p id="aircraft"></p>
+    <table id="parachutists-table">
+    </table>
+    <p id="no-flights"></p>
+<script src="{{ url_for('static', filename='next_flight.js') }}"></script>
 </body>
 </html>
