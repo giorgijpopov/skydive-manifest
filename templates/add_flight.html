@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create flight</title>
+</head>
+<body>
+    <h1>Create flight</h1>
+    <form action="/add_flight" method="POST">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required><br>
+
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" required><br>
+
+        <label for="flight_number">Flight Number:</label>
+        <input type="text" id="flight_number" name="flight_number" required><br>
+
+        <label for="aircraft_model">Aircraft:</label>
+        <input type="text" id="aircraft_model" name="aircraft_model" required><br>
+
+        <label for="parachutists">Skydivers:</label>
+        <ul id="parachutists-list">
+            <li><input type="text" name="parachutist" required></li>
+        </ul>
+        <button type="button" onclick="addParachutist()">Add skydiver</button><br>
+
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        function addParachutist() {
+            var ul = document.getElementById("parachutists-list");
+            var li = document.createElement("li");
+            li.innerHTML = '<input type="text" name="parachutist" required>';
+            ul.appendChild(li);
+        }
+    </script>
+</body>
+</html>

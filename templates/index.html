@@ -1,0 +1,14 @@
+<h1>Next Flight</h1>
+{% if flight %}
+    <p>Time Left: {{ remaining_time }}</p>
+    <p>Flight Number: {{ flight.flight_number }}</p>
+    <p>Aircraft: {{ flight.aircraft_model }}</p>
+    <p>Skydivers:</p>
+    <ul>
+        {% for parachutist in flight.parachutists.split(";") %}
+            <li>{{ parachutist }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No flights yet</p>
+{% endif %}
