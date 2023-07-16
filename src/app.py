@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect
 
 from models import Flight
 
+skydivers_separator = ';'
 database_path = 'data/flights.db'
 engine = create_engine(f'sqlite:///{database_path}')
 
@@ -14,7 +15,7 @@ session = Session()
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/next_flight')
 def index():
     current_datetime = datetime.now()
 
@@ -33,9 +34,9 @@ def index():
         hours = diff.seconds // 3600
         minutes = (diff.seconds // 60) % 60
         seconds = diff.seconds % 60
-        remaining_time = str(time(hours, minutes, seconds))
+        remaining_time = str(diff.seconds // 60) + " min"
 
-    return render_template('index.html', flight=closest_flight, remaining_time=remaining_time)
+    return render_template('next_flight.html', flight=closest_flight, remaining_time=remaining_time)
 
 @app.route('/add_flight', methods=['GET', 'POST'])
 def add_flight():
@@ -56,10 +57,46 @@ def add_flight():
         if existing_flight:
             return "Flight with this flight number already exists on this date"
 
-        new_flight = Flight(date=date, time=time_obj, flight_number=flight_number, aircraft_model=aircraft_model, parachutists=';'.join(parachutists))
+        new_flight = Flight(date=date, time=time_obj, flight_number=flight_number, aircraft_model=aircraft_model, parachutists=skydivers_separator.join(parachutists))
         session.add(new_flight)
         session.commit()
 
         return redirect('/')
     else:
         return render_template('add_flight.html')
+
+@app.route('/edit_flight', methods=['GET', 'POST'])
+def edit_flight():
+    if request.method == 'POST':
+        date = datetime.strptime(request.form.get('date'), '%Y-%m-%d').date()
+        flight_number = request.form.get('flight_number')
+
+        flight_to_edit = (
+            session.query(Flight)
+            .filter_by(date=date, flight_number=flight_number)
+            .first()
+        )
+
+        if flight_to_edit:
+            flight_to_edit.time = datetime.strptime(request.form.get('time'), '%H:%M').time()
+            flight_to_edit.aircraft_model = request.form.get('aircraft_model')
+            flight_to_edit.parachutists = skydivers_separator.join(request.form.getlist('parachutist'))
+            session.commit()
+            return redirect('/next_flight')
+        else:
+            return "Flight not found"
+    else:
+        date = datetime.strptime(request.args.get('date'), '%Y-%m-%d').date()
+        flight_number = request.args.get('flight_number')
+
+        flight_to_edit = (
+            session.query(Flight)
+            .filter_by(date=date, flight_number=flight_number)
+            .first()
+        )
+
+        if flight_to_edit:
+            return render_template('edit_flight.html', flight=flight_to_edit)
+        else:
+            return "Flight not found"
+

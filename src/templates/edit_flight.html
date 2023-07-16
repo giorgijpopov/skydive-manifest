@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Flight</title>
+</head>
+<body>
+    <h1>Edit Flight</h1>
+    <form action="/edit_flight" method="POST">
+        <input type="hidden" name="date" value="{{ flight.date }}">
+        <input type="hidden" name="flight_number" value="{{ flight.flight_number }}">
+        <label for="date">Date: {{ flight.date }}</label><br>
+        <label for="flight_number">Flight Number: {{ flight.flight_number }}</label><br>
+
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" value="{{ flight.time.strftime('%H:%M') }}" required><br>
+
+        <label for="aircraft_model">Aircraft:</label>
+        <input type="text" id="aircraft_model" name="aircraft_model" value="{{ flight.aircraft_model }}" required><br>
+
+        <label for="parachutists">Skydivers:</label>
+        <ul id="parachutists-list">
+            {% for parachutist in flight.parachutists.split(';') %}
+                <li><input type="text" name="parachutist" value="{{ parachutist }}" required></li>
+            {% endfor %}
+        </ul>
+        <button type="button" onclick="addParachutist()">Add skydiver</button><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        function addParachutist() {
+            var ul = document.getElementById("parachutists-list");
+            var li = document.createElement("li");
+            li.innerHTML = '<input type="text" name="parachutist" required>';
+            ul.appendChild(li);
+        }
+    </script>
+</body>
+</html>
