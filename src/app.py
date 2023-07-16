@@ -47,6 +47,15 @@ def add_flight():
         aircraft_model = request.form.get('aircraft_model')
         parachutists = request.form.getlist('parachutist')
 
+        existing_flight = (
+            session.query(Flight)
+            .filter_by(date=date, flight_number=flight_number)
+            .first()
+        )
+
+        if existing_flight:
+            return "Flight with this flight number already exists on this date"
+
         new_flight = Flight(date=date, time=time_obj, flight_number=flight_number, aircraft_model=aircraft_model, parachutists=';'.join(parachutists))
         session.add(new_flight)
         session.commit()

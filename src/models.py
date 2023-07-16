@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Date, Time, String
+from sqlalchemy import Column, Integer, Date, Time, String, Index
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -7,7 +7,7 @@ class Flight(Base):
     __tablename__ = 'flights'
 
     id = Column(Integer, primary_key=True)
-    date = Column(Date)
+    date = Column(Date, index=True)
     time = Column(Time)
     flight_number = Column(String)
     aircraft_model = Column(String)
