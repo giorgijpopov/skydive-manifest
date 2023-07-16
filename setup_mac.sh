@@ -32,7 +32,7 @@ echo "Creating running script..."
 cat <<EOT > run.sh
 #!/bin/bash
 source myenv/bin/activate
-export FLASK_APP=app.py
+export FLASK_APP=src/app.py
 flask run --host=0.0.0.0 --port=8000
 EOT
 
