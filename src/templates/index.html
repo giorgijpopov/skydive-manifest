@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+        }
+        .button {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Skydiving Manifesto!</h1>
+        <p>Choose you option:</p>
+        <form action="/next_flight" method="GET">
+                        <input type="submit" value="See Next Flight">
+                    </form>
+        <form action="/flights_by_date" method="get">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="{{ date }}" required>
+            <button type="submit">Manage Flights</button>
+        </form>
+    </div>
+</body>
+</html>

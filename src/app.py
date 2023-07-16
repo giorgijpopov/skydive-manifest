@@ -1,5 +1,5 @@
 from datetime import datetime
-from datetime import time
+from datetime import date
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from flask import Flask, render_template, request, redirect
@@ -14,6 +14,11 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 app = Flask(__name__)
+
+@app.route('/')
+def home():
+    today = date.today()
+    return render_template('index.html', date=today)
 
 @app.route('/next_flight')
 def index():
