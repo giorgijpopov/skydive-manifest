@@ -17,12 +17,15 @@
         <label for="aircraft_model">Aircraft:</label>
         <input type="text" id="aircraft_model" name="aircraft_model" value="{{ flight.aircraft_model }}" required><br>
 
-        <label for="parachutists">Skydivers:</label>
-        <ul id="parachutists-list">
+        <label for="parachutists">Skidivers:</label>
+        <table id="parachutists-table">
             {% for parachutist in flight.parachutists.split(';') %}
-                <li><input type="text" name="parachutist" value="{{ parachutist }}" required></li>
+            <tr>
+                <td><input type="text" name="parachutist" value="{{ parachutist }}" required></td>
+                <td><button type="button" onclick="deleteSkydiver(this)">Delete</button></td>
+            </tr>
             {% endfor %}
-        </ul>
+        </table>
         <button type="button" onclick="addParachutist()">Add skydiver</button><br>
 
         <input type="submit" value="Submit">
@@ -30,10 +33,15 @@
 
     <script>
         function addParachutist() {
-            var ul = document.getElementById("parachutists-list");
-            var li = document.createElement("li");
-            li.innerHTML = '<input type="text" name="parachutist" required>';
-            ul.appendChild(li);
+            var table = document.getElementById("parachutists-table");
+            var tr = document.createElement("tr");
+            tr.innerHTML = '<td><input type="text" name="parachutist" required></td><td><button type="button" onclick="deleteSkydiver(this)">Delete</button></td>';
+            table.appendChild(tr);
+        }
+
+        function deleteSkydiver(button) {
+            var closestTr = button.closest('tr')
+            closestTr.remove()
         }
     </script>
 </body>
