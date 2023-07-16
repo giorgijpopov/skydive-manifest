@@ -34,7 +34,7 @@ function updateNextFlightPage() {
                     const num = newRow.insertCell();
                     const name = newRow.insertCell();
 
-                    num.textContent = i;
+                    num.textContent = i + 1;
                     name.textContent = sk;
                 })
 
