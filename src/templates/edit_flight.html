@@ -21,6 +21,7 @@
         <table id="parachutists-table">
             {% for parachutist in flight.parachutists.split(';') %}
             <tr>
+                <td>{{ loop.index }}</td>
                 <td><input type="text" name="parachutist" value="{{ parachutist }}" required></td>
                 <td><button type="button" onclick="deleteSkydiver(this)">Delete</button></td>
             </tr>
@@ -31,18 +32,6 @@
         <input type="submit" value="Submit">
     </form>
 
-    <script>
-        function addParachutist() {
-            var table = document.getElementById("parachutists-table");
-            var tr = document.createElement("tr");
-            tr.innerHTML = '<td><input type="text" name="parachutist" required></td><td><button type="button" onclick="deleteSkydiver(this)">Delete</button></td>';
-            table.appendChild(tr);
-        }
-
-        function deleteSkydiver(button) {
-            var closestTr = button.closest('tr')
-            closestTr.remove()
-        }
-    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>

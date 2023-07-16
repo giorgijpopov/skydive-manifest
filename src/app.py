@@ -34,7 +34,7 @@ def index():
         hours = diff.seconds // 3600
         minutes = (diff.seconds // 60) % 60
         seconds = diff.seconds % 60
-        remaining_time = str(diff.seconds // 60) + " min"
+        remaining_time = diff.seconds // 60
 
     return render_template('next_flight.html', flight=closest_flight, remaining_time=remaining_time)
 

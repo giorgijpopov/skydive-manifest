@@ -2,11 +2,29 @@
 <head>
     <meta http-equiv="refresh" content="60">
     <title>Next Flight</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-size: 24px;
+        }
+
+        .remaining-time {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <h1>Next Flight</h1>
 {% if flight %}
-    <p>Time Left: {{ remaining_time }}</p>
+    {% if remaining_time <= 10 %}
+            <p>Time Left: <span class="remaining-time">{{ remaining_time }} min</span></p>
+    {% else %}
+            <p>Time Left: {{ remaining_time }} min</p>
+    {% endif %}
     <p>Flight Number: {{ flight.flight_number }}</p>
     <p>Aircraft: {{ flight.aircraft_model }}</p>
     <p>Skydivers:</p>
