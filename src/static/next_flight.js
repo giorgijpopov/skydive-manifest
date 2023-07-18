@@ -6,62 +6,66 @@ function updateNextFlightPage() {
         .then(data => {
             console.log('second then success' + data);
             if (data.flight) {
-                var time = document.getElementById("time");
+                clearAll()
+
+                var time = document.getElementById("header");
                 if (data.remaining_time <= 10) {
-                    time.innerHTML = `Time Left: <span class="remaining-time">${data.remaining_time} min</span>`;
+                    time.innerHTML = `Flight №${data.flight.flight_number}: <span class="remaining-time">${data.remaining_time} min left</span>`;
                 } else {
-                    time.innerHTML = `Time Left: ${data.remaining_time} min`;
+                    time.innerHTML = `Flight №${data.flight.flight_number}: ${data.remaining_time} min left`;
                 }
 
-                var flightNumber = document.getElementById("flight-number");
-                flightNumber.textContent = `Flight Number: ${data.flight.flight_number}`
-
-                var aircraft = document.getElementById("aircraft");
-                aircraft.textContent = `Aircraft: ${data.flight.aircraft_model}`
-
-                var table = document.getElementById("parachutists-table");
-                if (!table) return;
-
-                table.innerHTML = '';
-                const newRow = table.insertRow();
-                const num = newRow.insertCell();
-                const name = newRow.insertCell();
-                num.textContent = "№";
-                name.textContent = "Skydiver";
-
-                data.flight.parachutists.split(';').forEach((sk, i)=>{
-                    const newRow = table.insertRow();
-                    const num = newRow.insertCell();
-                    const name = newRow.insertCell();
-
-                    num.textContent = i + 1;
-                    name.textContent = sk;
-                })
-
-                var noFlights = document.getElementById("no-flights");
-                noFlights.textContent = ``;
+                skydivers = data.flight.parachutists.split(';')
+                fillTable(document.getElementById("parachutists-table"), skydivers)
             } else {
                 showNoFlights();
             }
         });
 }
 
-function showNoFlights() {
-    var time = document.getElementById("time");
-    time.innerHTML = ``;
-
-    var flightNumber = document.getElementById("flight-number");
-    flightNumber.innerHTML = ``;
-
-    var aircraft = document.getElementById("aircraft");
-    aircraft.innerHTML = ``;
-
-    var table = document.getElementById("parachutists-table");
+function fillTable(table, skydivers) {
     table.innerHTML = '';
+    createRow(table, "№", "Skydiver", "№", "Skydiver")
 
+    numRows = Math.max(10, Math.ceil(skydivers.length / 2));
+    for (let i = 0; i < numRows; i++) {
+        leftIndex = i
+        rightIndex = numRows + i
+        createRow(table, leftIndex + 1, skydivers[leftIndex] || '', rightIndex + 1, skydivers[rightIndex] || '');
+    }
+}
+
+function createRow(table, cell1, cell2, cell3, cell4) {
+    const newRow = table.insertRow();
+    const c1 = newRow.insertCell();
+    const c2 = newRow.insertCell();
+    const c3 = newRow.insertCell();
+    const c4 = newRow.insertCell();
+    c1.textContent = cell1;
+    c1.classList.add("number-column");
+
+    c2.textContent = cell2;
+    c2.classList.add("skydiver-column");
+
+    c3.textContent = cell3;
+    c3.classList.add("number-column");
+
+    c4.textContent = cell4;
+    c4.classList.add("skydiver-column");
+}
+
+function clearAll() {
+    ['header', 'parachutists-table', 'no-flights'].forEach(s=>{
+        var time = document.getElementById(s);
+        time.innerHTML = ``;
+    })
+}
+
+function showNoFlights() {
+    clearAll()
     var noFlights = document.getElementById("no-flights");
     noFlights.textContent = `No flights yet`;
 }
 
 updateNextFlightPage();
-setInterval(updateNextFlightPage, 30000);
+setInterval(updateNextFlightPage, 10000);

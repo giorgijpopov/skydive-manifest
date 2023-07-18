@@ -7,22 +7,44 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            min-height: 10vh;
             font-size: 24px;
         }
 
         .remaining-time {
             color: red;
         }
+
+        .number-column {
+            background-color: #f2f2f2;
+        }
+
+        .skydiver-column {
+            background-color: #b0e2ff;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 2px solid;
+        }
+
+        th, td {
+            border: 1px solid #007bff;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-<h1>Next Flight</h1>
-    <p id="time"></p>
-    <p id="flight-number"></p>
-    <p id="aircraft"></p>
-    <table id="parachutists-table">
-    </table>
+    <h1 id="header"></h1>
+    <table id="parachutists-table"></table>
     <p id="no-flights"></p>
 <script src="{{ url_for('static', filename='next_flight.js') }}"></script>
 </body>
