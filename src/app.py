@@ -147,8 +147,8 @@ def flights_by_date():
 
 @app.route('/delete_flight', methods=['POST'])
 def delete_flight():
-    date_str = request.form.get('date')
-    flight_number = request.form.get('flight_number')
+    date_str = request.json.get('date')
+    flight_number = request.json.get('flight_number')
 
     flight_to_delete = (
         session.query(Flight)
